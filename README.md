@@ -181,6 +181,8 @@ Each Turn Context = [Structured Summary] + [Relevant Historical Conversation] + 
 
 ## Example Usage
 
+![cover](demo.jpg)
+
 ### Environment Requirements
 - Go 1.20 or higher
 - OpenAI API key

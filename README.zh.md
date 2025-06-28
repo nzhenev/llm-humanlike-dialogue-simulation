@@ -178,6 +178,8 @@
 
 ## 範例使用
 
+![cover](demo.jpg)
+
 ### 環境要求
 - Go 1.20 或更高版本
 - OpenAI API 金鑰
