@@ -20,12 +20,12 @@ Research on **15 LLMs across 200,000+ conversations** shows:
 
 ### Four Key Issues
 
-| LLM Problem | Human Behavior | New Solution |
-| - | - | - |
-| **Premature Solutions** | Ask clarifying questions first | - |
-| **Information Hoarding** | Forget irrelevant details | Structured summaries retaining only relevant info |
-| **Linear Replay** | Maintain "current state" | Refresh summary each turn + dynamic history retrieval |
-| **Verbose Spirals** | Stay focused | - |
+| LLM Problem | Human Behavior |
+| - | - |
+| **Premature Solutions** | Ask clarifying questions first |
+| **Information Hoarding** | Forget irrelevant details | 
+| **Linear Replay** | Maintain "current state" | 
+| **Verbose Spirals** | Stay focused |
 
 ## Real Conversation Process
 
@@ -106,14 +106,15 @@ State updates: Continuous summarization, similar to mental event understanding
 3. **Current state focus → Fixed context structure** (structured summaries)<br>
   Dynamically adjust current conversation direction, not re-reviewing entire conversation history
 
-| Cognitive Mode | Human Behavior | LLM | Simulation Implementation |
+#### Comparison
+| Cognitive Mode | Human Behavior | Traditional LLM | Simulation Implementation |
 | - | - | - | - |
 | **Memory Management** | Selective retention | Perfect recall | Structured forgetting |
 | **Error Learning** | Avoid known failures | Repeat mistakes | Excluded options tracking |
 | **Focus Maintenance** | Current state oriented | Historical drowning | Summary-based context |
 | **Memory Retrieval** | Active associative triggering | Passive complete memory | Automatic fuzzy search |
 
-## Memory Architecture Comparison
+## Memory Architecture
 
 ### LLM "Complete Memory" (Non-human conversation method)
 
@@ -184,14 +185,19 @@ Current topic-related questions to clarify
 All important historical discussion points
 ```
 
-## Fuzzy Retrieval Algorithm Design
+## Fuzzy Retrieval Algorithm
+> Human memory retrieval is typically triggered by keywords, such as: "what we mentioned earlier..."<br>
+> This section is designed to calculate high similarity between the latest question and conversation history to provide supplementary reference materials, simulating **natural memory trigger mechanisms**:
+> - Keyword triggering: Immediately associate relevant content upon hearing specific keywords
+> - Semantic Similarity: Comprehend content with similar meaning but different wording
+> - Time Weight: Recent conversations are more easily recalled
 
 ### Multi-dimensional Scoring Mechanism
 ```
 Total score = Keyword overlap (40%) + Semantic similarity (40%) + Time weight (20%)
 ```
 
-**Keyword Overlap**
+**Keyword triggering**
 - Use Jaccard similarity to calculate vocabulary matching degree
 - Support partial matching and inclusion relationships
 
@@ -239,8 +245,8 @@ Each turn conversation context = [Structured summary] + [Relevant historical con
 
 1. **Clone the project**
 ```bash
-git clone https://github.com/pardnchiu/llm-dialogue-simulation 
-cd llm-dialogue-simulation
+git clone https://github.com/pardnchiu/llm-humanlike-dialogue-simulation 
+cd llm-humanlike-dialogue-simulation
 ```
 
 2. **Configure API key**
