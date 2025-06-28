@@ -5,6 +5,8 @@
 > Solving the "LLM gets lost in multi-turn conversations" problem by **human-like dialogue simulation**.<br>
 > Reference paper: [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)
 
+![cover](demo.jpg)
+
 ## Real Conversation Process
 
 ### Continuous Summary Updates in Mind
@@ -180,8 +182,6 @@ Each Turn Context = [Structured Summary] + [Relevant Historical Conversation] + 
 - [ ] **Multi-model Support**: Support more LLM providers (Claude, Gemini, etc.)
 
 ## Example Usage
-
-![cover](demo.jpg)
 
 ### Environment Requirements
 - Go 1.20 or higher

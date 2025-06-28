@@ -2,6 +2,8 @@
 > 透過**模擬人類對話方式**，嘗試解決「LLM 在多輪對話中迷失」的問題。<br>
 > 參考論文來源 [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)
 
+![cover](demo.jpg)
+
 ## 真實對話過程
 
 ### 持續在腦中更新摘要
@@ -177,8 +179,6 @@
 - [ ] **多模型支援**：支援更多 LLM 提供商（Claude、Gemini 等）
 
 ## 範例使用
-
-![cover](demo.jpg)
 
 ### 環境要求
 - Go 1.20 或更高版本
