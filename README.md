@@ -4,9 +4,7 @@
 # LLM Short-Term Memory Solution Study
 > Attempting to solve the problem of "LLMs getting lost in multi-turn conversations" by **simulating human conversation patterns**.<br>
 > Reference paper: [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)<br>
-> [Quick Jump to Example](#example-usage)
-
-[![cover](demo.jpg)](#example-usage)
+> [Quick Jump to TUI Example](#tui-example-usage)
 
 ## Paper Problem Analysis
 > [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)
@@ -27,20 +25,6 @@ Research on **15 LLMs across 200,000+ conversations** shows:
 | **Linear Replay** | Maintain "current state" | 
 | **Verbose Spirals** | Stay focused |
 
-## Real Conversation Process
-
-### Continuously Updating Mental Summary
-
-- Humans don't repeatedly go through entire conversation history in their minds
-- Instead, they maintain a dynamic "current understanding" and update conclusions based on new information
-- Past details fade or disappear, but key conclusions and constraints persist
-
-### Keyword-Triggered Recall
-
-- When someone says "that thing we discussed earlier"
-- We perform fuzzy searches of recent memory for relevant information
-- Only retrieve specific details when triggered by reference keywords
-
 ## Filtering Trumps Memory
 
 **Cognitive Burden of Perfect Memory**
@@ -54,6 +38,20 @@ Selective attention > Complete memory
 Abstract summarization > Detail preservation  
 Dynamic adaptation > Fixed replay
 ```
+
+## Real Conversation Process
+
+### Continuously Updating Mental Summary
+
+- Humans don't repeatedly go through entire conversation history in their minds
+- Instead, they maintain a dynamic "current understanding" and update conclusions based on new information
+- Past details fade or disappear, but key conclusions and constraints persist
+
+### Keyword-Triggered Recall
+
+- When someone says "that thing we discussed earlier"
+- We perform fuzzy searches of recent memory for relevant information
+- Only retrieve specific details when triggered by reference keywords
 
 ## Implementation Plan
 
@@ -235,7 +233,9 @@ Each turn conversation context = [Structured summary] + [Relevant historical con
 - [ ] **Conversation type identification**: Optimize memory strategies for different conversation scenarios
 - [ ] **Multi-model support**: Support more LLM providers (Claude, Gemini, etc.)
 
-## Example Usage
+## TUI Example Usage
+
+![cover](demo.jpg)
 
 ### Environment Requirements
 - Go 1.20 or higher
