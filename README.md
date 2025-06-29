@@ -4,7 +4,7 @@
 # LLM Short-Term Memory Solution Study
 > Attempting to solve the problem of "LLMs getting lost in multi-turn conversations" by **simulating human conversation patterns**.<br>
 > Reference paper: [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)<br>
-> [Quick Jump to TUI Example](#tui-example-usage)
+> Provides 2 TUI modes for testing traditional vs new architecture: [Jump to TUI Example](#tui-example-usage)
 
 ## Paper Problem Analysis
 > [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)
@@ -263,10 +263,12 @@ export OPENAI_API_KEY="your-openai-api-key-here"
 3. **Run the program**
 ```bash
 ./llmsd
+./llmsd --old # Run traditional memory mode
 ```
 or
 ```bash
 go run main.go
+go run main.go --old # Run traditional memory mode
 ```
 
 #### API Key Configuration

@@ -1,7 +1,7 @@
 # LLM 短期記憶解決探討
 > 透過**模擬人類對話方式**，嘗試解決「LLM 在多輪對話中迷失」的問題。<br>
 > 參考論文來源 [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)<br>
-> [快速跳轉 TUI 範例](#tui-範例使用)
+> 提供傳統與新架構 2 種 TUI 模式做測試：[快速跳轉 TUI 範例](#tui-範例使用)
 
 ## 論文問題探討
 > [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)
@@ -260,10 +260,12 @@ export OPENAI_API_KEY="your-openai-api-key-here"
 3. **執行程式**
 ```bash
 ./llmsd
+./llmsd --old # 跑傳統記憶模式
 ```
 或是
 ```bash
 go run main.go
+go run main.go --old # 跑傳統記憶模式
 ```
 
 #### API 金鑰配置

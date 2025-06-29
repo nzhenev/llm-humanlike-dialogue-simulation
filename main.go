@@ -62,16 +62,38 @@ func init() {
 }
 
 func main() {
-	appState := model.CreateUI()
+	var appState *model.Frame
 
-	// 設置輸入處理
-	appState.Input.SetDoneFunc(func(key tcell.Key) {
-		if key == tcell.KeyEnter {
-			userInput := appState.Input.GetText()
-			appState.Input.SetText("")
-			appState.APIHandler(userInput)
+	// 檢查命令列參數
+	useOldUI := false
+	for _, arg := range os.Args[1:] {
+		if arg == "--old" {
+			useOldUI = true
+			break
 		}
-	})
+	}
+
+	if useOldUI {
+		appState = model.CreateOldUI()
+		// 設置輸入處理
+		appState.Input.SetDoneFunc(func(key tcell.Key) {
+			if key == tcell.KeyEnter {
+				userInput := appState.Input.GetText()
+				appState.Input.SetText("")
+				appState.OldAPIHandler(userInput)
+			}
+		})
+	} else {
+		appState = model.CreateUI()
+		// 設置輸入處理
+		appState.Input.SetDoneFunc(func(key tcell.Key) {
+			if key == tcell.KeyEnter {
+				userInput := appState.Input.GetText()
+				appState.Input.SetText("")
+				appState.APIHandler(userInput)
+			}
+		})
+	}
 
 	// 設置全局按鍵處理
 	appState.App.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -81,12 +103,22 @@ func main() {
 		case tcell.KeyTab:
 			// Tab 切換焦點
 			currentFocus := appState.App.GetFocus()
-			if currentFocus == appState.Input {
-				appState.App.SetFocus(appState.Conversation)
-			} else if currentFocus == appState.Conversation {
-				appState.App.SetFocus(appState.Summary)
+			if useOldUI {
+				// 舊版 UI 只有 Input 和 Conversation
+				if currentFocus == appState.Input {
+					appState.App.SetFocus(appState.Conversation)
+				} else {
+					appState.App.SetFocus(appState.Input)
+				}
 			} else {
-				appState.App.SetFocus(appState.Input)
+				// 新版 UI 有 Input、Conversation 和 Summary
+				if currentFocus == appState.Input {
+					appState.App.SetFocus(appState.Conversation)
+				} else if currentFocus == appState.Conversation {
+					appState.App.SetFocus(appState.Summary)
+				} else {
+					appState.App.SetFocus(appState.Input)
+				}
 			}
 		}
 		return event
