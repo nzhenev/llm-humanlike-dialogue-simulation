@@ -1,10 +1,11 @@
 > [!Note]
 > This content is translated by LLM. Original text can be found [here](README.zh.md)
 
-# LLM Short-Term Memory Solution Study
-> Attempting to solve the problem of "LLMs getting lost in multi-turn conversations" by **simulating human conversation patterns**.<br>
-> Reference paper: [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)<br>
-> Provides 2 TUI modes for testing traditional vs new architecture: [Jump to TUI Example](#tui-example-usage)
+# Cognitive Imperfect Memory System
+> Attempts to solve traditional LLM issues of getting lost in multi-turn conversations and single conversation length limitations by **simulating human dialogue patterns**.<br>
+> Based on research paper [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)<br>
+> Example provides both traditional and new architecture TUI modes for testing: [Quick Jump to TUI Example](#tui-example-usage)
+
 
 ## Paper Problem Analysis
 > [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)
@@ -245,8 +246,8 @@ Each turn conversation context = [Structured summary] + [Relevant historical con
 
 1. **Clone the project**
 ```bash
-git clone https://github.com/pardnchiu/llm-humanlike-dialogue-simulation 
-cd llm-humanlike-dialogue-simulation
+git clone https://github.com/pardnchiu/cim-prototype 
+cd cim-prototype
 ```
 
 2. **Configure API key**
@@ -262,8 +263,8 @@ export OPENAI_API_KEY="your-openai-api-key-here"
 
 3. **Run the program**
 ```bash
-./llmsd
-./llmsd --old # Run traditional memory mode
+./cimp
+./cimp --old # Run traditional memory mode
 ```
 or
 ```bash

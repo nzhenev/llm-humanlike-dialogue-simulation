@@ -1,7 +1,7 @@
-# LLM 短期記憶解決探討
-> 透過**模擬人類對話方式**，嘗試解決「LLM 在多輪對話中迷失」的問題。<br>
+# 認知不完美記憶系統
+> 透過**模擬人類對話方式**，嘗試解決傳統 LLM 在多輪對話中迷失以及單一對話長度限制問題。<br>
 > 參考論文來源 [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)<br>
-> 提供傳統與新架構 2 種 TUI 模式做測試：[快速跳轉 TUI 範例](#tui-範例使用)
+> 範例提供傳統與新架構 2 種 TUI 模式做測試：[快速跳轉 TUI 範例](#tui-範例使用)
 
 ## 論文問題探討
 > [LLMs Get Lost In Multi-Turn Conversation](https://arxiv.org/abs/2505.06120)
@@ -242,8 +242,8 @@ graph TB
 
 1. **複製專案**
 ```bash
-git clone https://github.com/pardnchiu/llm-humanlike-dialogue-simulation 
-cd llm-humanlike-dialogue-simulation
+git clone https://github.com/pardnchiu/cim-prototype 
+cd cim-prototype
 ```
 
 2. **配置 API 金鑰**
@@ -259,8 +259,8 @@ export OPENAI_API_KEY="your-openai-api-key-here"
 
 3. **執行程式**
 ```bash
-./llmsd
-./llmsd --old # 跑傳統記憶模式
+./cimp
+./cimp --old # 跑傳統記憶模式
 ```
 或是
 ```bash
