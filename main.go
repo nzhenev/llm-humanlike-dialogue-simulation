@@ -77,7 +77,7 @@ func main() {
 		appState = model.CreateOldUI()
 		appState.Input.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 			text := appState.Input.GetText()
-			if event.Key() == tcell.KeyEnter && strings.HasSuffix(text, "$$") {
+			if event.Key() == tcell.KeyEnter && len(text) > 2 && strings.HasSuffix(text, "$$") {
 				text = strings.TrimSuffix(text, "$$")
 				appState.Input.SetText("", true)
 				appState.OldAPIHandler(text)
@@ -90,7 +90,7 @@ func main() {
 		appState = model.CreateUI()
 		appState.Input.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 			text := appState.Input.GetText()
-			if event.Key() == tcell.KeyEnter && strings.HasSuffix(text, "$$") {
+			if event.Key() == tcell.KeyEnter && len(text) > 2 && strings.HasSuffix(text, "$$") {
 				text = strings.TrimSuffix(text, "$$")
 				appState.Input.SetText("", true)
 				appState.APIHandler(text)
