@@ -76,21 +76,24 @@ func main() {
 	if useOldUI {
 		appState = model.CreateOldUI()
 		appState.Input.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-			if event.Modifiers()&tcell.ModAlt != 0 && event.Name() == "Alt+Enter" {
-				userInput := appState.Input.GetText()
+			text := appState.Input.GetText()
+			if event.Key() == tcell.KeyEnter && strings.HasSuffix(text, "$$") {
+				text = strings.TrimSuffix(text, "$$")
 				appState.Input.SetText("", true)
-				appState.OldAPIHandler(userInput)
+				appState.OldAPIHandler(text)
 				return nil
 			}
 			return event
 		})
+
 	} else {
 		appState = model.CreateUI()
 		appState.Input.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-			if event.Modifiers()&tcell.ModAlt != 0 && event.Name() == "Alt+Enter" {
-				userInput := appState.Input.GetText()
+			text := appState.Input.GetText()
+			if event.Key() == tcell.KeyEnter && strings.HasSuffix(text, "$$") {
+				text = strings.TrimSuffix(text, "$$")
 				appState.Input.SetText("", true)
-				appState.APIHandler(userInput)
+				appState.APIHandler(text)
 				return nil
 			}
 			return event
