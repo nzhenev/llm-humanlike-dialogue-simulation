@@ -15,7 +15,7 @@ type Frame struct {
 	App             *tview.Application
 	Conversation    *tview.TextView
 	Summary         *tview.TextView
-	Input           *tview.InputField
+	Input           *tview.TextArea
 	CurrentSummary  Summary
 	conversationLog strings.Builder
 	Comparer        *Comparer
@@ -44,10 +44,10 @@ func CreateUI() *Frame {
 		SetTitle(" Summary ").
 		SetTitleAlign(tview.AlignLeft)
 
-	inputField := tview.NewInputField().
+	inputField := tview.NewTextArea().
 		SetLabel("Input: ").
-		SetFieldWidth(0).
-		SetFieldBackgroundColor(tcell.ColorBlack)
+		SetWrap(true).
+		SetWordWrap(true)
 	inputField.
 		SetBorder(true).
 		SetTitle(" Message ").
@@ -55,7 +55,7 @@ func CreateUI() *Frame {
 
 	rightFlex := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(summaryView, 0, 2, true).
-		AddItem(inputField, 3, 0, true)
+		AddItem(inputField, 9, 0, true)
 
 	mainFlex := tview.NewFlex().
 		AddItem(conversationView, 0, 2, true).
@@ -111,7 +111,7 @@ func CreateUI() *Frame {
 	return frame
 }
 
-func (f *Frame) addToConversation(setTime bool, speaker, message string) {
+func (f *Frame) AddToConversation(setTime bool, speaker, message string) {
 	now := time.Now().Format("15:04:05")
 	var msg string
 
@@ -143,7 +143,7 @@ func (f *Frame) APIHandler(userInput string) {
 		return
 	}
 
-	f.addToConversation(true, fmt.Sprintf("[yellow]%v[white]", "User"), userInput)
+	f.AddToConversation(true, fmt.Sprintf("[yellow]%v[white]", "User"), userInput)
 
 	// 使用模糊搜尋找到相關歷史對話
 	relevantRecords := f.Comparer.Search(userInput)
@@ -178,25 +178,25 @@ func (f *Frame) APIHandler(userInput string) {
 	// 使用 tiktoken 來計算 token 數量 for gpt-4o
 	tke, err := tiktoken.GetEncoding("o200k_base")
 	if err != nil {
-		f.addToConversation(true, fmt.Sprintf("[red]%v[white]", "錯誤"), fmt.Sprintf("[red]%v[white]", err))
+		f.AddToConversation(true, fmt.Sprintf("[red]%v[white]", "錯誤"), fmt.Sprintf("[red]%v[white]", err))
 		return
 	}
 
 	systemToken := tke.Encode(InstructionConversation, nil, nil)
 	contextToken := tke.Encode(context, nil, nil)
 
-	f.addToConversation(false, fmt.Sprintf("[grey]%v[white]", "Request token"), fmt.Sprintf("[grey]%d[white]", len(contextToken)+len(systemToken)))
+	f.AddToConversation(false, fmt.Sprintf("[grey]%v[white]", "Request token"), fmt.Sprintf("[grey]%d[white]", len(contextToken)+len(systemToken)))
 
 	go func() {
 		response, err := askWithLargeModel(messages)
 
 		f.App.QueueUpdateDraw(func() {
 			if err != nil {
-				f.addToConversation(true, fmt.Sprintf("[red]%v[white]", "Error"), fmt.Sprintf("[red]%v[white]", err))
+				f.AddToConversation(true, fmt.Sprintf("[red]%v[white]", "Error"), fmt.Sprintf("[red]%v[white]", err))
 				return
 			}
 
-			f.addToConversation(true, fmt.Sprintf("[green]%v[white]", "LLM"), response)
+			f.AddToConversation(true, fmt.Sprintf("[green]%v[white]", "LLM"), response)
 
 			go func() {
 				newSummary := f.generateSummary(f.CurrentSummary, userInput, response)
@@ -256,18 +256,18 @@ JSON 格式要求：
 	// 使用 tiktoken 來計算 token 數量 for gpt-4o
 	tke, err := tiktoken.GetEncoding("o200k_base")
 	if err != nil {
-		f.addToConversation(true, fmt.Sprintf("[red]%v[white]", "錯誤"), fmt.Sprintf("[red]%v[white]", err))
+		f.AddToConversation(true, fmt.Sprintf("[red]%v[white]", "錯誤"), fmt.Sprintf("[red]%v[white]", err))
 		return summary
 	}
 
 	promptToken := tke.Encode(prompt, nil, nil)
 	systemToken := tke.Encode("你是一個專業的對話概要整理助手。請根據對話內容提取並更新概要，保持 JSON 格式輸出。", nil, nil)
 
-	f.addToConversation(false, fmt.Sprintf("[grey]%v[white]", "Summary token"), fmt.Sprintf("[grey]%d[white]", len(promptToken)+len(systemToken)))
+	f.AddToConversation(false, fmt.Sprintf("[grey]%v[white]", "Summary token"), fmt.Sprintf("[grey]%d[white]", len(promptToken)+len(systemToken)))
 
 	response, err := askWithSmallModel(messages)
 	if err != nil {
-		f.addToConversation(true, fmt.Sprintf("[red]%v[white]", "錯誤"), fmt.Sprintf("[red]%v[white]", err))
+		f.AddToConversation(true, fmt.Sprintf("[red]%v[white]", "錯誤"), fmt.Sprintf("[red]%v[white]", err))
 		return summary
 	}
 
@@ -297,10 +297,10 @@ func CreateOldUI() *Frame {
 		SetTitle(" Record ").
 		SetTitleAlign(tview.AlignLeft)
 
-	inputField := tview.NewInputField().
+	inputField := tview.NewTextArea().
 		SetLabel("Input: ").
-		SetFieldWidth(0).
-		SetFieldBackgroundColor(tcell.ColorBlack)
+		SetWrap(true).
+		SetWordWrap(true)
 	inputField.
 		SetBorder(true).
 		SetTitle(" Message ").
@@ -308,7 +308,7 @@ func CreateOldUI() *Frame {
 
 	contentFlex := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(conversationView, 0, 2, true).
-		AddItem(inputField, 3, 0, true)
+		AddItem(inputField, 9, 0, true)
 
 	mainFlex := tview.NewFlex().
 		AddItem(contentFlex, 0, 1, true)
@@ -348,7 +348,7 @@ func (f *Frame) OldAPIHandler(userInput string) {
 		return
 	}
 
-	f.addToConversation(true, fmt.Sprintf("[yellow]%v[white]", "User"), userInput)
+	f.AddToConversation(true, fmt.Sprintf("[yellow]%v[white]", "User"), userInput)
 
 	messages := []Message{
 		{
@@ -388,7 +388,7 @@ func (f *Frame) OldAPIHandler(userInput string) {
 
 	tke, err := tiktoken.GetEncoding("o200k_base")
 	if err != nil {
-		f.addToConversation(true, fmt.Sprintf("[red]%v[white]", "錯誤"), fmt.Sprintf("[red]%v[white]", err))
+		f.AddToConversation(true, fmt.Sprintf("[red]%v[white]", "錯誤"), fmt.Sprintf("[red]%v[white]", err))
 		return
 	}
 
@@ -398,18 +398,18 @@ func (f *Frame) OldAPIHandler(userInput string) {
 		totalTokens += len(tokens)
 	}
 
-	f.addToConversation(false, fmt.Sprintf("[grey]%v[white]", "Request token"), fmt.Sprintf("[grey]%d[white]", totalTokens))
+	f.AddToConversation(false, fmt.Sprintf("[grey]%v[white]", "Request token"), fmt.Sprintf("[grey]%d[white]", totalTokens))
 
 	go func() {
 		response, err := askWithLargeModel(messages)
 
 		f.App.QueueUpdateDraw(func() {
 			if err != nil {
-				f.addToConversation(true, fmt.Sprintf("[red]%v[white]", "Error"), fmt.Sprintf("[red]%v[white]", err))
+				f.AddToConversation(true, fmt.Sprintf("[red]%v[white]", "Error"), fmt.Sprintf("[red]%v[white]", err))
 				return
 			}
 
-			f.addToConversation(true, fmt.Sprintf("[green]%v[white]", "LLM"), response)
+			f.AddToConversation(true, fmt.Sprintf("[green]%v[white]", "LLM"), response)
 		})
 	}()
 }

@@ -75,23 +75,25 @@ func main() {
 
 	if useOldUI {
 		appState = model.CreateOldUI()
-		// 設置輸入處理
-		appState.Input.SetDoneFunc(func(key tcell.Key) {
-			if key == tcell.KeyEnter {
+		appState.Input.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+			if event.Modifiers()&tcell.ModAlt != 0 && event.Name() == "Alt+Enter" {
 				userInput := appState.Input.GetText()
-				appState.Input.SetText("")
+				appState.Input.SetText("", true)
 				appState.OldAPIHandler(userInput)
+				return nil
 			}
+			return event
 		})
 	} else {
 		appState = model.CreateUI()
-		// 設置輸入處理
-		appState.Input.SetDoneFunc(func(key tcell.Key) {
-			if key == tcell.KeyEnter {
+		appState.Input.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+			if event.Modifiers()&tcell.ModAlt != 0 && event.Name() == "Alt+Enter" {
 				userInput := appState.Input.GetText()
-				appState.Input.SetText("")
+				appState.Input.SetText("", true)
 				appState.APIHandler(userInput)
+				return nil
 			}
+			return event
 		})
 	}
 
