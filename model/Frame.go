@@ -104,7 +104,7 @@ func CreateUI() *Frame {
 	summaryView.SetText(summary.FormatContent())
 
 	now := time.Now().Format("15:04:05")
-	msg := fmt.Sprintf("[gray]%s[white] [green]LLM[white]: Type to start chat\n[yellow]Shortcuts[white]: Enter to Send | Tab to Switch Panel | Ctrl+C to Exit\n\n", now)
+	msg := fmt.Sprintf("[gray]%s[white] [green]LLM[white]: Type to start chat\n[yellow]Shortcuts[white]: Type message and end with $$ to send | Tab to Switch Panel | Ctrl+C to Exit\n\n", now)
 	frame.conversationLog.WriteString(msg)
 	conversationView.SetText(frame.conversationLog.String())
 
@@ -336,7 +336,7 @@ func CreateOldUI() *Frame {
 	}
 
 	now := time.Now().Format("15:04:05")
-	msg := fmt.Sprintf("[gray]%s[white] [green]LLM[white]: Type to start chat\n[yellow]Shortcuts[white]: Enter to Send | Tab to Switch Panel | Ctrl+C to Exit\n\n", now)
+	msg := fmt.Sprintf("[gray]%s[white] [green]LLM[white]: Type to start chat\n[yellow]Shortcuts[white]: Type message and end with $$ to send | Tab to Switch Panel | Ctrl+C to Exit\n\n", now)
 	frame.conversationLog.WriteString(msg)
 	conversationView.SetText(frame.conversationLog.String())
 
