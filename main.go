@@ -75,30 +75,31 @@ func main() {
 
 	if useOldUI {
 		appState = model.CreateOldUI()
-		appState.Input.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-			text := appState.Input.GetText()
-			if event.Key() == tcell.KeyEnter && len(text) > 2 && strings.HasSuffix(text, "$$") {
-				text = strings.TrimSuffix(text, "$$")
-				appState.Input.SetText("", true)
-				appState.OldAPIHandler(text)
-				return nil
-			}
-			return event
-		})
-
 	} else {
 		appState = model.CreateUI()
-		appState.Input.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-			text := appState.Input.GetText()
-			if event.Key() == tcell.KeyEnter && len(text) > 2 && strings.HasSuffix(text, "$$") {
-				text = strings.TrimSuffix(text, "$$")
-				appState.Input.SetText("", true)
-				appState.APIHandler(text)
-				return nil
-			}
-			return event
-		})
 	}
+
+	appState.Input.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		text := appState.Input.GetText()
+		if event.Key() == tcell.KeyTab {
+			return nil // 阻止 Tab 鍵在輸入框中觸發
+		}
+		if event.Key() == tcell.KeyEnter && len(text) > 2 && (strings.HasSuffix(text, "$$") || strings.HasSuffix(text, "＄＄")) {
+			text = strings.TrimSuffix(text, "$$")
+			text = strings.TrimSuffix(text, "＄＄")
+			appState.Input.SetText("", true)
+
+			if useOldUI {
+				appState.OldAPIHandler(text)
+
+			} else {
+				appState.APIHandler(text)
+			}
+
+			return nil
+		}
+		return event
+	})
 
 	// 設置全局按鍵處理
 	appState.App.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
