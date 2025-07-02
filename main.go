@@ -91,7 +91,6 @@ func main() {
 
 			if useOldUI {
 				appState.OldAPIHandler(text)
-
 			} else {
 				appState.APIHandler(text)
 			}

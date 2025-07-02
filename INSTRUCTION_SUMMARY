@@ -6,10 +6,10 @@
 
 **具體更新策略**：
 - core_discussion：可以更新為最新主題
-- confirmed_needs, constraints, key_data, current_conclusion：**累積**保留
+- confirmed_needs, constraints, key_data, current_conclusion：累積保留所有討論點
 - excluded_options：敏感識別新排除，動態管理重新考慮
 - pending_questions：更新為當前相關問題
-- pending_discussion：累積所有重要討論點
+- pending_discussion：累積所有討論點
 
 **排除選項識別規則**：
 用戶表達以下意思時，必須加入 excluded_options：
