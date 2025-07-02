@@ -75,6 +75,25 @@ func (f *Comparer) Search(query string) []*ConversationRecord {
 		relevantRecords = append(relevantRecords, result.Record)
 	}
 
+	if len(relevantRecords) < 5 {
+		for _, record := range f.recordList {
+			exists := false
+			for _, existing := range relevantRecords {
+				if existing.Content == record.Content {
+					exists = true
+					break
+				}
+			}
+
+			if !exists {
+				relevantRecords = append(relevantRecords, record)
+				if len(relevantRecords) >= 5 {
+					break
+				}
+			}
+		}
+	}
+
 	return relevantRecords
 }
 
@@ -190,19 +209,24 @@ func (f *Comparer) FormatRelevant(records []*ConversationRecord) string {
 	var builder strings.Builder
 	builder.WriteString("=== 相關歷史對話 ===\n")
 
-	for i, record := range records {
-		if i >= 5 {
-			break
-		}
+	if len(records) > 0 {
+		for i, record := range records {
+			if i == 0 {
+				continue // 跳過第一條記錄
+			}
+			if i >= 5 {
+				break
+			}
 
-		speakerName := "User"
-		if record.User == "assistant" {
-			speakerName = "LLM"
-		}
+			speakerName := "User"
+			if record.User == "assistant" {
+				speakerName = "LLM"
+			}
 
-		builder.WriteString(fmt.Sprintf("%s: %s\n", speakerName, record.Content))
+			builder.WriteString(fmt.Sprintf("%s: %s\n", speakerName, record.Content))
+		}
+		builder.WriteString("\n")
 	}
 
-	builder.WriteString("\n")
 	return builder.String()
 }

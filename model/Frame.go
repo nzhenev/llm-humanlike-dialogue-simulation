@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"fmt"
+	"runtime"
 	"strings"
 	"time"
 
@@ -143,37 +144,51 @@ func (f *Frame) APIHandler(userInput string) {
 		return
 	}
 
+	userInput = strings.TrimSpace(userInput)
+
+	systemPrompt := strings.TrimSpace(
+		fmt.Sprintf(`=== 系統資訊 ===
+當前時間：%s
+作業系統與執行環境：%s
+
+=== 指令說明 ===
+%s`,
+			time.Now().Format("2006年01月02日 15:04:05"),
+			runtime.GOOS+"/"+runtime.GOARCH,
+			InstructionConversation,
+		),
+	)
+	systemSummary := strings.TrimSpace(f.CurrentSummary.FormatContext())
+
+	messages := []Message{
+		{
+			Role:    "system",
+			Content: systemPrompt,
+		},
+		{
+			Role:    "system",
+			Content: systemSummary,
+		},
+	}
+
 	f.AddToConversation(true, fmt.Sprintf("[yellow]%v[white]", "User"), userInput)
 
 	// 使用模糊搜尋找到相關歷史對話
 	relevantRecords := f.Comparer.Search(userInput)
-	relevantContext := f.Comparer.FormatRelevant(relevantRecords)
+	relevantContext := strings.TrimSpace(f.Comparer.FormatRelevant(relevantRecords))
 
 	// 構建包含相關歷史的上下文
-	var contextBuilder strings.Builder
-	contextBuilder.WriteString(f.CurrentSummary.FormatContext())
-
 	if relevantContext != "" {
-		contextBuilder.WriteString("\n")
-		contextBuilder.WriteString(relevantContext)
-	}
-
-	contextBuilder.WriteString("\n=== 新問題 ===\n")
-	contextBuilder.WriteString(userInput)
-
-	context := contextBuilder.String()
-
-	// context := fmt.Sprintf("%s\n\n=== 新問題 ===\n%s", f.CurrentSummary.FormatContext(), userInput)
-	messages := []Message{
-		Message{
+		messages = append(messages, Message{
 			Role:    "system",
-			Content: InstructionConversation,
-		},
-		Message{
-			Role:    "user",
-			Content: context,
-		},
+			Content: relevantContext,
+		})
 	}
+
+	messages = append(messages, Message{
+		Role:    "user",
+		Content: userInput,
+	})
 
 	// 使用 tiktoken 來計算 token 數量 for gpt-4o
 	tke, err := tiktoken.GetEncoding("o200k_base")
@@ -182,10 +197,10 @@ func (f *Frame) APIHandler(userInput string) {
 		return
 	}
 
-	systemToken := tke.Encode(InstructionConversation, nil, nil)
-	contextToken := tke.Encode(context, nil, nil)
+	systemToken := tke.Encode(systemPrompt+systemSummary+relevantContext, nil, nil)
+	inputToken := tke.Encode(userInput, nil, nil)
 
-	f.AddToConversation(false, fmt.Sprintf("[grey]%v[white]", "Request token"), fmt.Sprintf("[grey]%d[white]", len(contextToken)+len(systemToken)))
+	f.AddToConversation(false, fmt.Sprintf("[grey]%v[white]", "Request token"), fmt.Sprintf("[grey]%d[white]", len(inputToken)+len(systemToken)))
 
 	go func() {
 		response, err := askWithLargeModel(messages)
@@ -348,12 +363,27 @@ func (f *Frame) OldAPIHandler(userInput string) {
 		return
 	}
 
+	userInput = strings.TrimSpace(userInput)
+
 	f.AddToConversation(true, fmt.Sprintf("[yellow]%v[white]", "User"), userInput)
+
+	systemPrompt := strings.TrimSpace(
+		fmt.Sprintf(`=== 系統資訊 ===
+當前時間：%s
+作業系統與執行環境：%s
+
+=== 指令說明 ===
+%s`,
+			time.Now().Format("2006年01月02日 15:04:05"),
+			runtime.GOOS+"/"+runtime.GOARCH,
+			InstructionConversation,
+		),
+	)
 
 	messages := []Message{
 		{
 			Role:    "system",
-			Content: InstructionConversation,
+			Content: systemPrompt,
 		},
 	}
 
